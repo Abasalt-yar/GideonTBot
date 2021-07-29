@@ -14,4 +14,8 @@ This a group management bot using GrammY &amp; GramJS | <b>@GideonTBot & @Gideon
 * Discord: Abasalt_Yar#8160
 * IDPay Github: https://github.com/idpay
 
+# Links
+* https://github.com/gram-js/gramjs
+* https://github.com/grammyjs/grammY
+
 # I Hope You Enjoy It
