@@ -1,0 +1,23 @@
+{
+  "name": "gideontbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/app.js",
+  "scripts": {
+    "start": "tsc && cross-env MODE=production node dist/app.js > app.log 2>&1",
+    "dev": "tsc && cross-env MODE=development DEBUG=grammy* node dist/app.js"
+  },
+  "author": "Abasalt_Yar",
+  "license": "ISC",
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "dotenv": "^10.0.0",
+    "grammy": "^1.2.0",
+    "mongoose": "^5.13.2",
+    "telegram": "^1.7.22"
+  },
+  "devDependencies": {
+    "@types/mongoose": "^5.11.97",
+    "@types/node": "^16.3.2"
+  }
+}
