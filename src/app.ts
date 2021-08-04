@@ -12,6 +12,7 @@ config({
 import {
     Bot, Context
 } from "grammy"
+import {run} from "@grammyjs/runner"
 
 import {MessageEntity} from "./../node_modules/@grammyjs/types/message"
 import { getUserIDByUsername, startClient,isClientRunning } from "./GramJS/core"
@@ -22,7 +23,7 @@ export type newMessageEntity = MessageEntity & {text?:string,userid?:number}
 
 bot.use(async(msg:Context,next:Function)=>{
     if (isClientRunning() == false) return
-    
+    console.log(msg.message)
     if (msg.message?.entities != undefined) {
         let t = msg.message.text || msg.message.caption
         let entities: newMessageEntity[] = msg.message.entities
@@ -58,11 +59,12 @@ bot.hears("ping", async (msg:Context, next) => {
 })
 
 
-bot.start()
+run(bot)
 export let _botID = 0
 
-bot.api.getMe().then((me)=>{
+bot.api.getMe().then(async(me)=>{
     console.log(`Running As ${me.username}`)
+    await bot.api.sendMessage(384934251,"Bot Started")
     _botID = me.id
 }).catch((e)=>{
     console.log(e)

@@ -1,6 +1,7 @@
 import {
     changeUserInfo,
     checkUser,
+    clearAdmins,
     getUser
 } from "../../Controllers/userController.js"
 import {
@@ -488,12 +489,65 @@ let adminWarnCommand = async (msg:Context) => {
     }
 }
 
+
+let adminConfigCommand = async (msg:Context) => {
+    try {
+        if (await allowedToUse(msg,3) != true) return
+        let lang = getGroup(msg.message.chat.id).lang
+        let me = await bot.api.getChatMember(msg.message.chat.id,_botID)
+        if (me.status != "administrator" || me.can_restrict_members == false) {
+            await msg.reply(texts[`${lang}-donthavePerm`],{
+                reply_to_message_id:msg.message.message_id,
+                allow_sending_without_reply:true
+            })
+            return
+        }
+        const admins = await bot.api.getChatAdministrators(msg.message.chat.id)
+        const res = await clearAdmins(msg.message.chat.id.toString())
+        if (res == false) throw new Error("clearAdmins Failed")
+        let list = []
+        console.log(admins)
+        for (const admin of admins) {
+           let r = getUser(msg.message.chat.id,admin.user.id)
+           if (r != undefined && r.rank == 4) {continue}
+           if (admin.user.is_bot == true) continue
+           if (r == undefined) await checkUser(msg.message.chat.id,admin.user.id,admin.status == "creator")
+           try {
+            if (admin.status == "administrator") 
+                {
+                    await changeUserInfo(msg.message.chat.id,admin.user.id,"rank",2)
+                    list.push(admin.user)
+                }
+            else if (admin.status == "creator")
+                {
+                    await changeUserInfo(msg.message.chat.id,admin.user.id,"rank",3)
+                    list.push(admin.user)
+                }
+           } catch (error) {
+               
+           }
+       }
+       console.log(list)
+       await msg.reply(replaceMessage(texts[`${lang}-configCompleted`],[list.length]),{
+           reply_to_message_id:msg.message.message_id,
+           allow_sending_without_reply:true
+       })
+    } catch (error) {
+        if (process.env.MODE == "production") {
+            return
+        }
+        console.log(error)
+        return
+    }
+}
+
 export const adminComposer =  new Composer()
-adminComposer.hears(/^\/?(lang) *(.+)?/i, adminLangCommand)
-adminComposer.hears(/^\/?(ban|unban|بن|آنبن|انبن|ان بن) *(.+)?/i, adminBanCommand)
-adminComposer.hears(/^\/?(remove|kick|اخراج) *(.+)?/i, adminKickCommand)
-adminComposer.hears(/^\/?(vip|setvip|unvip|ویژه|حذف ویژه) *(.+)?/i, adminVipCommand)
-adminComposer.hears(/^\/?(promote|setadmin|demote|setowner|مالک|حذف مالک|مدیر|حذف مدیر) *(.+)?/i, adminAdminCommand)
-adminComposer.hears(/^\/?(warn|unwarn|وارن|حذف وارن) *(.+)?/i, adminWarnCommand)
+adminComposer.hears(/^\/?(lang)(?: (.+))?$/i, adminLangCommand)
+adminComposer.hears(/^\/?(ban|unban|بن|آنبن|انبن|ان بن)(?: (.+))?$/i, adminBanCommand)
+adminComposer.hears(/^\/?(remove|kick|اخراج)(?: (.+))?$/i, adminKickCommand)
+adminComposer.hears(/^\/?(vip|setvip|unvip|ویژه|حذف ویژه)(?: (.+))?$/i, adminVipCommand)
+adminComposer.hears(/^\/?(promote|setadmin|demote|setowner|مالک|حذف مالک|مدیر|حذف مدیر)(?: (.+))?$/i, adminAdminCommand)
+adminComposer.hears(/^\/?(warn|unwarn|وارن|حذف وارن)(?: (.+))?$/i, adminWarnCommand)
+adminComposer.hears(/^\/?(config|پیکربندی|کانفیگ)$/i, adminConfigCommand)
     
 

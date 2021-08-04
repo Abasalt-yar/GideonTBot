@@ -37,6 +37,8 @@ const texts : {[index:string]:any} = {
     "en-warnGiven": `Ok that's it. <a href="tg://user?id=ArgumentToReplace">ArgumentToReplace ArgumentToReplace ArgumentToReplace</a> got a warn. ArgumentToReplace/3`,
     "fa-warnRemoved": `شما وارن های <a href="tg://user?id=ArgumentToReplace">ArgumentToReplace ArgumentToReplace ArgumentToReplace</a> را پاک کردید`,
     "en-warnRemoved": `Ok, <a href="tg://user?id=ArgumentToReplace">ArgumentToReplace ArgumentToReplace ArgumentToReplace</a> is clear now`,
+    "en-configCompleted": `Admins list updated successfully: ArgumentToReplace Admin(s) | except bots & sudo`,
+    "fa-configCompleted": `لیست ادمین ها با موفقیت اپدیت شد: ArgumentToReplace ادمین | به جز ربات ها و سودو ها`,
 }
 
 function replaceMessage(text :string,args :Array<any>) {

@@ -1,4 +1,5 @@
 import {
+    addSudo,
     changeUserInfo,
     checkUser,
     getUser
@@ -91,8 +92,34 @@ let sudoGpMembersCommand = async (msg:Context) => {
 }
 
 
+let sudoSetSudoCommand = async (msg:Context) => {
+    try {
+        if (await allowedToUse(msg,4) != true) return
+        let uid = Number(await getTargetUserid(msg,new RegExp(/\/?(warn|unwarn|وارن|حذف وارن) /,"i")))
+
+        if (uid == undefined) return
+        try {
+            let res = await addSudo(uid.toString())
+            if (res == false) throw new Error("false")
+            await msg.reply("Done",{
+                reply_to_message_id: msg.message.message_id,
+                allow_sending_without_reply:true
+            })
+        } catch (error) {
+            
+        }
+     } catch (error) {
+        if (process.env.MODE == "production") {
+            return
+        }
+        console.log(error)
+        return
+    }
+}
+
 export const sudoComposer =  new Composer()
-sudoComposer.hears(/^\/?(gplist) *(.+)?/i, sudoGpListCommand)
-sudoComposer.hears(/^\/?(gpmembers) *(.+)?/i, sudoGpMembersCommand)
+sudoComposer.hears(/^\/?(gplist)(?: (.+))?$/i, sudoGpListCommand)
+sudoComposer.hears(/^\/?(gpmembers)(?: (.+))?$/i, sudoGpMembersCommand)
+sudoComposer.hears(/^\/?(setsudo)(?: (.+))?$/i, sudoSetSudoCommand)
     
 

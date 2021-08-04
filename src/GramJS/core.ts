@@ -1,5 +1,5 @@
 import { Bot, Context } from 'grammy';
-import { TelegramClient } from 'telegram'
+import { Api, TelegramClient } from 'telegram'
 import { StringSession }  from 'telegram/sessions'
 import {Logger} from "telegram/extensions";
 Logger.setLevel("error")
@@ -24,6 +24,7 @@ export const startClient = async(bot: Bot<Context>): Promise<void> =>{
     })
     
 }
+
 
 export const isClientRunning = ()=>{
     return client.connected
